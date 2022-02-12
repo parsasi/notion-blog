@@ -1,0 +1,1 @@
+export { configDatabase } from "./database";
