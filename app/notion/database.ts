@@ -9,6 +9,10 @@ export const configDatabase = ({
     auth: notionKey,
   });
 
+  const getPageWithId = async (pageId: string) => {
+    return await notion.pages.retrieve({ page_id: pageId });
+  };
+
   return {
     getPost: async (postIdentifier) => {
       const rawPosts = await notion.databases.query({
@@ -26,8 +30,12 @@ export const configDatabase = ({
       const rawPosts = await notion.databases.query({
         database_id: databaseId,
       });
+      const posts =
+        rawPosts?.results.map((item: { id: string }) =>
+          getPageWithId(item.id)
+        ) ?? [];
 
-      return rawPosts;
+      return Promise.all(posts);
     },
   };
 };
